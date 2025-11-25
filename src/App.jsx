@@ -1,27 +1,38 @@
-import { useState } from "react";
-import "./App.css";
-import { useEffect } from "react";
-import axios from "axios";
-import Input from "./components/Input";
-import Button from "./components/Button";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+// import AdminDashboard from "./pages/AdminDashboard";
+// import CustomerDashboard from "./pages/CustomerDashboard";
+import ProtectedRoute from "./layouts/ProtectedRoutes";
+import AdminDashboard from "./pages/AdminDashboard";
+import CustomerDashboard from "./pages/CustomDashboard";
+import ProtectedRoutes from "./layouts/ProtectedRoutes";
 
-function App() {
-  const [api, setApi] = useState("");
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get("/api/hello");
-      setApi(response.data);
-    };
-    fetchData();
-  }, []);
+export default function App() {
   return (
-    <>
-      <div>Hello</div>
-      <div>{api}</div>
-      <Input label="API Response " value={api} readOnly />
-      <Button onClick={() => alert("Button Clicked!")}>Click Me</Button>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/customer"
+          element={
+            <ProtectedRoute>
+              <CustomerDashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
